@@ -1,4 +1,5 @@
 name: gui_environment
+
 channels:
   - conda-forge
   - defaults
