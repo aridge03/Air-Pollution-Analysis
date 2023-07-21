@@ -1,33 +1,62 @@
 
 import tkinter as tk
+from tkinter import ttk
 import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-def plot_graph():
-    # Read CSV data (replace 'data.csv' with your actual file path)
-    df = pd.read_csv('first_40_lines.csv')
+def load_csv_data(file_path):
+    # Read the CSV data using pandas
+    return pd.read_csv(file_path)
 
-    # Plot the graph using matplotlib
-    fig, ax = plt.subplots()
-    ax.plot(df['X'], df['Y'], marker='o', linestyle='-')
-    ax.set_xlabel('X Axis')
-    ax.set_ylabel('Y Axis')
-    ax.set_title('CSV Data Plot')
+def display_table():
+    # Get the file path from the user (replace 'your_file.csv' with your actual file path)
+    file_path = 'C:/Users/alyse.ridge/OneDrive - Government of Alberta/Documents/GitHub/Gui-Project-repo/first_40_lines.csv'
 
-    # Display the graph on the tkinter canvas
-    canvas = FigureCanvasTkAgg(fig, master=root)
-    canvas.draw()
-    canvas.get_tk_widget().pack()
+    # Load the CSV data into a pandas DataFrame
+    data = load_csv_data(file_path)
 
-# Create the main application window
-root = tk.Tk()
-root.title("CSV Data Graph")
+    # Create a tkinter window
+    root = tk.Tk()
+    root.title("CSV Data Table")
 
-# Button to plot the graph
-plot_button = tk.Button(root, text="Plot Graph", command=plot_graph)
-plot_button.pack(pady=10)
+    # Create a Treeview widget to display the table
+    table = ttk.Treeview(root)
 
-# Start the main event loop
-root.mainloop()
+    # Configure columns
+    columns = list(data.columns)
+    table["columns"] = columns
+    table.heading("#0", text="Index")
+    for col in columns:
+        table.heading(col, text=col)
+        table.column(col, width=100, anchor="center")
 
+    # Insert data into the table
+    for index, row in data.iterrows():
+        table.insert("", "end", text=index, values=list(row))
+
+    # Pack the table and start the main event loop
+    table.pack(expand=True, fill="both")
+    root.mainloop()
+
+def on_button_click():
+    display_table()
+
+
+
+
+
+if __name__ == "__main__":
+
+  # Create the main application window
+    app = tk.Tk()
+    app.title("Button and Table Example")
+
+    # Create a label widget
+    label = tk.Label(app, text="Welcome to tkinter!")
+    label.pack(pady=10)
+
+    # Create a button widget
+    button = tk.Button(app, text="Click Me!", command=on_button_click)
+    button.pack(pady=10)
+
+    # Start the main event loop
+    app.mainloop()
